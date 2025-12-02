@@ -13,7 +13,7 @@ This guide explains how to download and run the SnapCD Runner binary on your loc
 Download the latest runner binary from GitHub releases:
 
 ```bash
-VERSION=0.1.4 # select the version you want here
+VERSION=0.1.5 # select the version you want here
 curl -L -o SnapCd.Runner https://github.com/schrieksoft/snapcd-runner/releases/download/$VERSION/SnapCd.Runner
 chmod +x SnapCd.Runner
 ```
