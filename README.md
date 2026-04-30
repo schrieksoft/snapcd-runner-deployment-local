@@ -5,45 +5,60 @@ This guide explains how to download and run the SnapCD Runner binary on your loc
 ## Prerequisites
 
 - Linux x64 operating system. If on Windows, use Windows Subsystem for Linux (WSL).
-- Network access [snapcd.io](https://snapcd.io).
-- Organization ID and Runner ID, as well as Service Principal credentials (Client ID and Client Secret) from [snapcd.io](https://snapcd.io).
+- Network access to your SnapCD Server. For SaaS this is [snapcd.io](https://snapcd.io); for a self-hosted Server it's whatever URL you've deployed it at.
+- `unzip` available on your `$PATH`.
+- Organization ID and Runner ID, as well as Service Principal credentials (Client ID and Client Secret), obtained from your SnapCD Server's Dashboard.
+
+> The Runner is published as a **self-contained `linux-x64` build** — the .NET runtime is bundled. You do **not** need to install .NET on the host.
 
 ## Download
 
-Download the latest runner binary from GitHub releases:
+The Runner is published as a zip archive attached to GitHub Releases on the [schrieksoft/snapcd](https://github.com/schrieksoft/snapcd/releases) repository. Each release publishes two flavours:
+
+| Asset | When to use |
+|-------|-------------|
+| `snapcd-runner-<version>.zip` | Standard build. Use this for most deployments. |
+| `snapcd-runner-azure-<version>.zip` | Bundles the Azure CLI for hooks/providers that require `az`. Use only if your modules need it. |
+
+Download and extract the latest archive:
 
 ```bash
-VERSION=0.1.13 # select the version you want here
-curl -L -o SnapCd.Runner https://github.com/schrieksoft/snapcd-runner/releases/download/$VERSION/SnapCd.Runner
-chmod +x SnapCd.Runner
+VERSION=0.1.13   # pick the release you want from https://github.com/schrieksoft/snapcd/releases
+curl -L -o snapcd-runner.zip \
+  https://github.com/schrieksoft/snapcd/releases/download/$VERSION/snapcd-runner-$VERSION.zip
+unzip snapcd-runner.zip -d snapcd-runner
+chmod +x snapcd-runner/SnapCd.Runner
 ```
+
+This leaves a `snapcd-runner/` directory containing the `SnapCd.Runner` executable plus its bundled runtime files.
 
 ## Configuration
 
-Create an `appsettings.json` file in the same directory as the binary:
+Copy the example configuration into the extracted directory and edit it:
 
 ```bash
-cp appsettings.example.json appsettings.json
+cp appsettings.example.json snapcd-runner/appsettings.json
 ```
 
-Edit `appsettings.json` with your configuration values:
+Edit `snapcd-runner/appsettings.json` with your values:
 
 | Setting | Description |
 |---------|-------------|
-| `Runner.Id` | The unique ID of the runner (GUID format, obtained from SnapCD server) |
-| `Runner.Instance` | A friendly name for this runner instance |
-| `Runner.Credentials.ClientId` | OAuth client ID for authentication |
-| `Runner.Credentials.ClientSecret` | OAuth client secret for authentication |
-| `Runner.OrganizationId` | The organization ID this runner belongs to |
-| `Server.Url` | The URL of your SnapCD server |
-| `WorkingDirectory.WorkingDirectory` | Directory where the runner stores working files |
+| `Runner.Id` | The unique ID of the Runner (GUID, obtained from the SnapCD Server) |
+| `Runner.Instance` | A friendly name for this Runner instance |
+| `Runner.Credentials.ClientId` | OAuth client ID for the Runner's Service Principal |
+| `Runner.Credentials.ClientSecret` | OAuth client secret for the Runner's Service Principal |
+| `Runner.OrganizationId` | The organization ID this Runner belongs to |
+| `Server.Url` | The URL of your SnapCD Server (`https://snapcd.io` for SaaS, or your self-hosted URL) |
+| `WorkingDirectory.WorkingDirectory` | Directory where the Runner stores working files |
 | `WorkingDirectory.TempDirectory` | Directory for temporary files |
 | `HooksPreapproval.Enabled` | Enable/disable hooks preapproval feature |
 | `HooksPreapproval.PreapprovedHooksDirectory` | Directory containing preapproved hook scripts |
+| `Engine.AdditionalBinaryPaths` | Extra directories prepended to `$PATH` for hooks and engines (e.g. Pulumi) |
 
 ## Directory Structure
 
-The runner uses the following directories by default:
+The Runner uses the following directories by default:
 
 - `~/.snapcd/runner` - Working directory for runner operations
 - `~/.snapcd/runner/.temp` - Temporary files
@@ -56,13 +71,17 @@ mkdir -p ~/.snapcd/runner/.temp
 mkdir -p ~/.snapcd/preapproved-hooks
 ```
 
-
 ## Running
 
-Start the runner:
+Start the Runner from the extracted directory:
 
 ```bash
+cd snapcd-runner
 ./SnapCd.Runner
 ```
 
-The runner will connect to the configured SnapCD server and begin processing jobs.
+The Runner will connect to the configured SnapCD Server and begin processing jobs.
+
+## Upgrading
+
+To upgrade to a newer release, download and extract a new archive into a fresh directory, copy your existing `appsettings.json` over, and restart. The Runner is stateless beyond its `WorkingDirectory`, so swapping binaries is safe.
