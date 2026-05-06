@@ -5,9 +5,9 @@ This guide explains how to download and run the SnapCD Runner binary on your loc
 ## Prerequisites
 
 - Linux x64 operating system. If on Windows, use Windows Subsystem for Linux (WSL).
-- Network access to your SnapCD Server. For SaaS this is [snapcd.io](https://snapcd.io); for a self-hosted Server it's whatever URL you've deployed it at.
+- Network access to your Snap CD Server. For SaaS this is [snapcd.io](https://snapcd.io); for a self-hosted Server it's whatever URL you've deployed it at.
 - `unzip` available on your `$PATH`.
-- Organization ID and Runner ID, as well as Service Principal credentials (Client ID and Client Secret), obtained from your SnapCD Server's Dashboard.
+- Organization ID and Runner ID, as well as Service Principal credentials (Client ID and Client Secret), obtained from your Snap CD Server's Dashboard.
 
 > The Runner is published as a **self-contained `linux-x64` build** — the .NET runtime is bundled. You do **not** need to install .NET on the host.
 
@@ -44,12 +44,12 @@ Edit `snapcd-runner/appsettings.json` with your values:
 
 | Setting | Description |
 |---------|-------------|
-| `Runner.Id` | The unique ID of the Runner (GUID, obtained from the SnapCD Server) |
+| `Runner.Id` | The unique ID of the Runner (GUID, obtained from the Snap CD Server) |
 | `Runner.Instance` | A friendly name for this Runner instance |
 | `Runner.Credentials.ClientId` | OAuth client ID for the Runner's Service Principal |
 | `Runner.Credentials.ClientSecret` | OAuth client secret for the Runner's Service Principal |
 | `Runner.OrganizationId` | The organization ID this Runner belongs to |
-| `Server.Url` | The URL of your SnapCD Server (`https://snapcd.io` for SaaS, or your self-hosted URL) |
+| `Server.Url` | The URL of your Snap CD Server (`https://snapcd.io` for SaaS, or your self-hosted URL) |
 | `WorkingDirectory.WorkingDirectory` | Directory where the Runner stores working files |
 | `WorkingDirectory.TempDirectory` | Directory for temporary files |
 | `HooksPreapproval.Enabled` | Enable/disable hooks preapproval feature |
@@ -80,7 +80,7 @@ cd snapcd-runner
 ./SnapCd.Runner
 ```
 
-The Runner will connect to the configured SnapCD Server and begin processing jobs.
+The Runner will connect to the configured Snap CD Server and begin processing jobs.
 
 ## Upgrading
 
