@@ -1,6 +1,6 @@
-# SnapCD Runner - Local Deployment
+# Snap CD Runner - Local Deployment
 
-This guide explains how to download and run the SnapCD Runner binary on your local machine.
+This guide explains how to download and run the Snap CD Runner binary on your local machine.
 
 ## Prerequisites
 
